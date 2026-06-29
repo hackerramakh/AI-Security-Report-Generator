@@ -1,0 +1,66 @@
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cyber-title {
+    color: #58a6ff;
+    text-shadow: 0 0 15px rgba(88, 166, 255, 0.4);
+    font-weight: 800;
+}
+
+.cyber-card {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.cyber-card h3 {
+    color: #f0883e;
+    font-size: 1.2rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 0.6rem;
+}
+
+.cyber-input {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    color: #c9d1d9;
+}
+
+.cyber-input:focus {
+    background-color: #0d1117;
+    border-color: #58a6ff;
+    color: #c9d1d9;
+    box-shadow: 0 0 8px rgba(88, 166, 255, 0.4);
+}
+
+.btn-cyber {
+    background: linear-gradient(45deg, #1f6feb, #892cdc);
+    border: 1px solid #58a6ff;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.btn-cyber:hover {
+    background: linear-gradient(45deg, #892cdc, #1f6feb);
+    box-shadow: 0 0 15px rgba(137, 44, 220, 0.6);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ألوان مستويات الخطورة */
+.badge-Critical { background-color: #da3633; color: white; }
+.badge-High { background-color: #f0883e; color: black; font-weight: bold; }
+.badge-Medium { background-color: #d29922; color: black; font-weight: bold; }
+.badge-Low { background-color: #3fb950; color: white; }
+
+.vuln-detail-box {
+    background-color: #0d1117;
+    border-right: 4px solid #1f6feb;
+    border-radius: 4px;
+}
