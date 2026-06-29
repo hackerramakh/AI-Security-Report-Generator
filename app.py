@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 app = FastAPI()
 
+# 🛡️ تفعيل الـ CORS بشكل كامل لفك حظر المتصفح المحلي
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -20,10 +21,10 @@ app.add_middleware(
 
 load_dotenv()
 
-api_key_env = os.environ.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
-# اتركيه فارغاً؛ المكتبة ستقرأ المتغير GEMINI_API_KEY من بيئة Render تلقائياً وبأعلى كفاءة
+# تهيئة عميل جيميناي (سيقرأ المتغير GEMINI_API_KEY من النظام تلقائياً وبأعلى كفاءة سحابية)
 client = genai.Client()
-# ✅ Schema كـ dict صريح بدل Pydantic model
+
+# 📊 الـ Schema المهيكلة على شكل Dict صريح لمنع مشاكل إصدارات Pydantic
 ANALYSIS_SCHEMA = {
     "type": "object",
     "properties": {
@@ -40,7 +41,7 @@ ANALYSIS_SCHEMA = {
                     "impact":         {"type": "string"},
                     "recommendation": {"type": "string"},
                 },
-                "required": ["name","severity","description","explanation","impact","recommendation"]
+                "required": ["name", "severity", "description", "explanation", "impact", "recommendation"]
             }
         },
         "ai_insights": {"type": "string"},
@@ -57,7 +58,7 @@ async def analyze_report(
     text_input: str = Form(default=None),
     file: UploadFile = File(default=None)
 ):
-    # ✅ تحقق من وجود محتوى
+    # تحقق من وجود محتوى مدخل
     has_text = text_input and text_input.strip() and text_input.strip() != "undefined"
     has_file = file and file.filename and file.filename != ""
 
@@ -66,6 +67,7 @@ async def analyze_report(
 
     contents = []
 
+    # معالجة الملف المرفوع إن وجد
     if has_file:
         try:
             file_bytes = await file.read()
@@ -79,13 +81,12 @@ async def analyze_report(
         except Exception as e:
             raise HTTPException(status_code=400, detail=f"Error reading file: {str(e)}")
 
+    # معالجة النص المكتوب
     if has_text:
         contents.append(f"User Input Context:\n{text_input.strip()}")
 
-    if not contents:
-        raise HTTPException(status_code=400, detail="No valid content found to analyze.")
-
     try:
+        # الاستدعاء المستقر لنموذج جيميناي
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=contents,
@@ -95,7 +96,7 @@ async def analyze_report(
                     "input and return a structured JSON security report based on your findings."
                 ),
                 response_mime_type="application/json",
-                response_schema=ANALYSIS_SCHEMA,  # ✅ dict بدل Pydantic
+                response_schema=ANALYSIS_SCHEMA,
                 temperature=0.2,
             )
         )
