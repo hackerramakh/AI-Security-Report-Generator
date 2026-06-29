@@ -19,17 +19,18 @@ app.add_middleware(
 )
 
 # تحديد مسار المجلد الرئيسي للمشروع بدقة ديناميكية لملف الـ .env
+# تحديد مسار المجلد الرئيسي للمشروع بدقة ديناميكية لملف الـ .env (للتشغيل المحلي)
 BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_path = BASE_DIR / ".env"
 load_dotenv(dotenv_path=dotenv_path)
 
-# استدعاء الكي من البيئة
-api_key_env = os.getenv("GEMINI_API_KEY")
+# 🚀 الحل الذكي: يقرأ من البيئة السحابية لـ Render مباشرة، وإذا لم يجدها يقرأ من الملف المحلي
+api_key_env = os.environ.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
 
 if not api_key_env:
-    print(f"❌ WARNING: GEMINI_API_KEY is missing! Searched in: {dotenv_path}")
+    print("❌ WARNING: GEMINI_API_KEY is missing globally!")
 else:
-    print("✅ GEMINI_API_KEY loaded successfully from dynamic path!")
+    print("✅ GEMINI_API_KEY loaded successfully from environment!")
 
 # تمرير الكي للعميل
 client = genai.Client(api_key=api_key_env)
