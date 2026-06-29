@@ -7,18 +7,19 @@ async function generateReport() {
         return;
     }
 
-    // تهيئة الواجهة لبدء التحميل
+    // تهيئة الواجهة لبدء التحميل واكتشاف الثغرات
     document.getElementById('loading').classList.remove('d-none');
     
     const dashboard = document.getElementById('reportDashboard') || document.getElementById('report-dashboard');
     if (dashboard) dashboard.classList.add('d-none');
 
     const formData = new FormData();
-    // إرسال النص دائماً حتى لو فارغ لضمان استقرار طلب الـ Form
+    // إرسال النص دائماً حتى لو فارغ لضمان استقرار طلب الـ Form مع FastAPI
     formData.append('text_input', textInput || '');
     if (fileInput) formData.append('file', fileInput);
 
     try {
+        // 🚀 الرابط معدل بالكامل بـ HTTPS ليعمل أونلاين على GitHub Pages بدون حظر أمني
         const response = await fetch('https://ai-security-report-generator.onrender.com/api/analyze', {
             method: 'POST',
             body: formData
@@ -31,7 +32,7 @@ async function generateReport() {
 
         const data = await response.json();
         
-        // 🚀 استدعاء دالة العرض وحقن البيانات في الـ HTML
+        // استدعاء دالة العرض وحقن البيانات في الـ HTML
         displayReport(data);
 
     } catch (error) {
@@ -42,26 +43,26 @@ async function generateReport() {
     }
 }
 
-// 🛡️ دالة استقبال البيانات وعرضها داخل الـ Dashboard بشكل متكامل
+// 🛡️ دالة استقبال البيانات وتوزيعها داخل الـ Dashboard بشكل متكامل على كل الأقسام
 function displayReport(data) {
     // 1. إظهار لوحة التحكم بالكامل
     const dashboard = document.getElementById('reportDashboard') || document.getElementById('report-dashboard');
     if (dashboard) dashboard.classList.remove('d-none');
 
-    // 2. عرض الملخص التنفيذي
+    // 2. عرض الملخص التنفيذي (Executive Summary)
     const execSummary = document.getElementById('executiveSummary');
     if (execSummary) {
         execSummary.innerText = data.executive_summary || 'No executive summary available.';
     }
 
-    // 3. عرض رؤى الذكاء الاصطناعي
+    // 3. عرض رؤى الذكاء الاصطناعي (AI Insights)
     const aiInsights = document.getElementById('aiInsights');
     if (aiInsights) {
         aiInsights.innerText = data.ai_insights || 'No AI insights available.';
     }
 
-    // 4. بناء جدول الثغرات (مختصر وأنيق)
-    const tableBody = document.getElementById('vulnerabilitiesList');
+    // 4. بناء جدول الثغرات بشكل نظيف ومختصر (Vulnerability Breakdown)
+    const tableBody = document.getElementById('vulnerabilitiesList') || document.querySelector('table tbody');
     if (tableBody) {
         tableBody.innerHTML = ''; // تنظيف البيانات القديمة
         const vulnerabilities = data.vulnerabilities || [];
@@ -90,7 +91,7 @@ function displayReport(data) {
         techDetails.innerHTML = ''; // تنظيف المحتوى القديم
         data.vulnerabilities.forEach(vuln => {
             techDetails.innerHTML += `
-                <div class="mb-4 p-3 border border-secondary rounded bg-dark">
+                <div class="mb-4 p-3 border border-secondary rounded bg-dark text-start">
                     <h5 class="text-info">📌 ${vuln.name} - <span class="text-muted">Technical Details</span></h5>
                     <p class="text-light mt-2"><strong>Explanation:</strong> ${vuln.explanation || ''}</p>
                     <p class="text-warning"><strong>Impact:</strong> ${vuln.impact || ''}</p>
