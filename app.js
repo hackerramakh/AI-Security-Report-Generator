@@ -113,3 +113,23 @@ techDetails.innerHTML += `
         });
     }
 }
+// دالة تصدير التقرير لـ PDF
+async function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const element = document.getElementById('reportDashboard'); // هذا هو القسم الذي سيتم تصويره
+
+    // استخدام html2canvas لتحويل الـ Dashboard إلى صورة
+    const canvas = await html2canvas(element, { 
+        scale: 2, 
+        backgroundColor: '#1a1a1a' // لون خلفية البطاقات عندك
+    });
+    
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save('AI_Security_Report.pdf');
+}

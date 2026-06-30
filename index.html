@@ -43,6 +43,7 @@
                     <div class="cyber-card p-4 mb-4">
                         <h3>📊 Executive Summary</h3>
                         <p id="execSummary" class="lead text-light" style="font-size: 1.05rem;"></p>
+                        <button onclick="exportToPDF()" class="btn btn-outline-info mt-3">📥 Export Report to PDF</button>
                     </div>
 
                     <div class="cyber-card p-4 mb-4">
@@ -80,5 +81,8 @@
     </div>
 
     <script src="app.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
