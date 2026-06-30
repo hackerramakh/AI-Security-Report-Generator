@@ -75,13 +75,17 @@ function displayReport(data) {
             else if (severity === 'low') badgeColor = 'bg-success';
 
             const row = `
-                <tr>
-                    <td class="text-info fw-bold">📌 ${vuln.name || 'Unknown'}</td>
-                    <td><span class="badge ${badgeColor}">${(vuln.severity || 'LOW').toUpperCase()}</span></td>
-                    <td>${vuln.description || ''}</td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
+    <tr>
+        <td class="text-info fw-bold">📌 ${vuln.name || 'Unknown'}</td>
+        <td><span class="badge ${badgeColor}">${(vuln.severity || 'LOW').toUpperCase()}</span></td>
+        <td><span class="badge bg-primary">${vuln.cvss_score || 'N/A'}</span></td>
+        <td>
+            <span class="text-warning small d-block">CWE: ${vuln.cwe_id || 'N/A'}</span>
+            <span class="text-info small d-block">OWASP: ${vuln.owasp_mapping || 'N/A'}</span>
+        </td>
+    </tr>
+`;
+tableBody.innerHTML += row;
         });
     }
 
@@ -90,14 +94,22 @@ function displayReport(data) {
     if (techDetails && data.vulnerabilities && data.vulnerabilities.length > 0) {
         techDetails.innerHTML = ''; // تنظيف المحتوى القديم
         data.vulnerabilities.forEach(vuln => {
-            techDetails.innerHTML += `
-                <div class="mb-4 p-3 border border-secondary rounded bg-dark text-start">
-                    <h5 class="text-info">📌 ${vuln.name} - <span class="text-muted">Technical Details</span></h5>
-                    <p class="text-light mt-2"><strong>Explanation:</strong> ${vuln.explanation || ''}</p>
-                    <p class="text-warning"><strong>Impact:</strong> ${vuln.impact || ''}</p>
-                    <p class="text-success"><strong>💡 Recommendation & Mitigation:</strong> ${vuln.recommendation || ''}</p>
-                </div>
-            `;
+            // داخل الـ loop الخاص بالبطاقات
+techDetails.innerHTML += `
+    <div class="mb-4 p-3 border border-secondary rounded bg-dark text-start">
+        <div class="d-flex justify-content-between">
+            <h5 class="text-info">📌 ${vuln.name}</h5>
+            <div>
+                <span class="badge bg-danger">CVSS: ${vuln.cvss_score}</span>
+                <span class="badge bg-secondary">${vuln.cwe_id}</span>
+            </div>
+        </div>
+        <p class="text-muted small">OWASP Mapping: ${vuln.owasp_mapping}</p>
+        <p class="text-light mt-2"><strong>Explanation:</strong> ${vuln.explanation || ''}</p>
+        <p class="text-warning"><strong>Impact:</strong> ${vuln.impact || ''}</p>
+        <p class="text-success"><strong>💡 Recommendation:</strong> ${vuln.recommendation || ''}</p>
+    </div>
+`;
         });
     }
 }
