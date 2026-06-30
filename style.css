@@ -64,3 +64,27 @@ body {
     border-right: 4px solid #1f6feb;
     border-radius: 4px;
 }
+
+/* تنسيق رسالة الخطأ الجديدة */
+.alert-danger {
+    background-color: #3d1a1a;
+    border: 1px solid #da3633;
+    color: #ffa198;
+    padding: 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* تنسيق إضافي لزر التصدير ليناسب الـ Theme */
+.btn-outline-info {
+    border: 1px solid #58a6ff;
+    color: #58a6ff;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-info:hover {
+    background-color: #58a6ff;
+    color: #0d1117;
+}
