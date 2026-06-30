@@ -116,17 +116,24 @@ techDetails.innerHTML += `
 // دالة تصدير التقرير لـ PDF
 async function exportToPDF() {
     const { jsPDF } = window.jspdf;
-    const element = document.getElementById('reportDashboard'); // هذا هو القسم الذي سيتم تصويره
+    // التقاط كامل الـ Dashboard
+    const element = document.getElementById('reportDashboard');
+    
+    // إضافة استثناء للزر عشان ما يظهر في الـ PDF (اختياري)
+    const button = document.querySelector('button[onclick="exportToPDF()"]');
+    if (button) button.style.display = 'none';
 
-    // استخدام html2canvas لتحويل الـ Dashboard إلى صورة
     const canvas = await html2canvas(element, { 
         scale: 2, 
-        backgroundColor: '#1a1a1a' // لون خلفية البطاقات عندك
+        backgroundColor: '#1a1a1a',
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight
     });
-    
+
+    if (button) button.style.display = 'block'; // إرجاع الزر
+
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'mm', 'a4');
-    
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
